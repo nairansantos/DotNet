@@ -1,160 +1,205 @@
-﻿﻿
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-/*
-No .NET, existem vários tipos de dados numéricos inteiros. Aqui estão alguns dos tipos mais comuns:
+﻿﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-int (Inteiro):
-Tamanho: 32 bits em sistemas de 32 bits e 64 bits em sistemas de 64 bits.
-
-long (Inteiro Longo):
-Tamanho: 64 bits.
-
-short (Inteiro Curto):
-Tamanho: 16 bits.
-
-byte (Byte):
-Tamanho: 8 bits.
-
-sbyte (SByte):
-Tamanho: 8 bits, pode armazenar números negativos.
-
-uint (Inteiro Sem Sinal):
-Tamanho: 32 bits, armazena apenas números não negativos.
-
-ulong (Inteiro Longo Sem Sinal):
-Tamanho: 64 bits, armazena apenas números não negativos.
-
-ushort (Inteiro Curto Sem Sinal):
-Tamanho: 16 bits, armazena apenas números não negativos.
-veja  exemplos em códigos:
-*/
-
-int idade = 25;
-Console.WriteLine("Idade: " + idade);
-
-// Exemplo com long
-long populacaoMundial = 7_900_000_000L;
-Console.WriteLine("População Mundial: " + populacaoMundial);
-
-// Exemplo com short
-short temperaturaMinima = -10;
-Console.WriteLine("Temperatura Mínima:" + temperaturaMinima);
-
-// Exemplo com byte
-byte niveisDeCinza = 128;
-Console.WriteLine("Níveis de Cinza: " + niveisDeCinza);
-
-// Exemplo com sbyte
-sbyte variacaoTemperatura = -5;
-Console.WriteLine("Variação de Temperatura: " + variacaoTemperatura);
-
-// Exemplo com uint
-uint quantidadeItens = 1_000;
-Console.WriteLine("Quantidade de Itens: " + quantidadeItens);
-
-// Exemplo com ulong
-ulong valorMaximo = 9_000_000_000_000_000_000UL;
-Console.WriteLine("Valor Máximo: " + valorMaximo);
-
-// Exemplo com ushort
-ushort numeroDePortas = 10_000;
-Console.WriteLine("Número de Portas: " + numeroDePortas);
-
-#region 
-//Conversão de Tipos de Dados:
+// Classe Tarefa
+class Tarefa
 {
+  // Atributos
+  public string Titulo { get; set; }
+  public string Descricao { get; set; }
+  public bool Concluida { get; set; }
+  public DateTime Prazo { get; set; }
 
-  double valorDouble = 15.75;
-  int valorInteiro = (int)valorDouble;
-  Console.WriteLine($"Valor double:" + valorDouble);
-  Console.WriteLine($"Valor inteiro : " + valorInteiro);
-  /*Se a parte fracionária da variável double não puder ser convertida para um int por meio de casting em C#, ocorrerá a chamada "truncamento" da parte decimal. O truncamento simplesmente remove a parte fracionária, deixando apenas a parte inteira do número.*/
-
-  Console.ReadLine();
-}
-#endregion
-int x = 10;
-int y = 3;
-
-// Operações
-int adicao = x + y;
-int subtracao = x - y;
-int multiplicacao = x * y;
-
-
-if (y != 0)
-{
-  int divisao = x / y;
-
-
-  Console.WriteLine($"Adição: " + adicao);
-  Console.WriteLine($"Subtração: " + subtracao);
-  Console.WriteLine($"Multiplicação: " + multiplicacao);
-  Console.WriteLine($"Divisão: " + divisao);
-}
-else
-{
-  Console.WriteLine("A divisão por zero não é permitida.");
+  // Construtor
+  public Tarefa(string titulo, string descricao, bool concluida, DateTime prazo)
+  {
+    Titulo = titulo;
+    Descricao = descricao;
+    Concluida = concluida;
+    Prazo = prazo;
+  }
 }
 
-
-#region Operadores de Comparação:
+namespace MeuProjeto
 {
+  class Menu
+  {
+    static List<Tarefa> tarefas = new List<Tarefa>();
 
-  int a = 5;
-  int b = 8;
+    static void Main(string[] args)
+    {
+      while (true)
+      {
+        Console.WriteLine("----- TAREFAS -----");
+        Console.WriteLine("1. Adicionar tarefa");
+        Console.WriteLine("2. Marcar tarefa como concluída");
+        Console.WriteLine("3. Excluir tarefa");
+        Console.WriteLine("4. Listar tarefas");
+        Console.WriteLine("5. Buscar tarefas");
+        Console.WriteLine("6. Estatísticas");
+        Console.WriteLine("7. Editar tarefa");
+        Console.WriteLine("0. Sair");
+        Console.WriteLine("Escolha uma opção:");
 
-  bool aMaiorQueB = a > b;
+        int escolha;
+        if (!int.TryParse(Console.ReadLine(), out escolha))
+        {
+          Console.WriteLine("Opção inválida. Tente novamente.");
+          continue;
+        }
 
+        switch (escolha)
+        {
+          case 1:
+            AdicionarTarefa();
+            break;
+          case 2:
+            MarcarComoConcluida();
+            break;
+          case 3:
+            ExcluirTarefa();
+            break;
+          case 4:
+            ListarTarefas();
+            break;
+          case 5:
+            BuscarTarefas();
+            break;
+          case 6:
+            ExibirEstatisticas();
+            break;
+          case 7:
+            EditarTarefa();
+            break;
+          case 0:
+            return;
+          default:
+            Console.WriteLine("Opção inválida. Tente novamente.");
+            break;
+        }
+      }
+    }
 
-  Console.WriteLine("A é maior que B? " + aMaiorQueB);
+    static void AdicionarTarefa()
+    {
+      Console.WriteLine("Qual o título da tarefa?");
+      string titulo = Console.ReadLine();
+      Console.WriteLine("Qual a descrição da tarefa?");
+      string descricao = Console.ReadLine();
+      Console.WriteLine("Qual o prazo da tarefa (yyyy-mm-dd)?");
+
+      if (DateTime.TryParse(Console.ReadLine(), out DateTime prazo))
+      {
+        tarefas.Add(new Tarefa(titulo, descricao, false, prazo));
+        Console.WriteLine("Tarefa adicionada com sucesso!");
+      }
+      else
+      {
+        Console.WriteLine("Formato de data inválido. Tarefa não adicionada.");
+      }
+    }
+
+    static void MarcarComoConcluida()
+    {
+      ListarTarefas();
+      Console.WriteLine("Qual tarefa deseja marcar como concluída?");
+      if (int.TryParse(Console.ReadLine(), out int escolha) && escolha > 0 && escolha <= tarefas.Count)
+      {
+        tarefas[escolha - 1].Concluida = true;
+        Console.WriteLine("Tarefa marcada como concluída!");
+      }
+      else
+      {
+        Console.WriteLine("Escolha inválida. Tarefa não marcada como concluída.");
+      }
+    }
+
+    static void ExcluirTarefa()
+    {
+      ListarTarefas();
+      Console.WriteLine("Qual tarefa deseja excluir?");
+      if (int.TryParse(Console.ReadLine(), out int escolha) && escolha > 0 && escolha <= tarefas.Count)
+      {
+        tarefas.RemoveAt(escolha - 1);
+        Console.WriteLine("Tarefa excluída com sucesso!");
+      }
+      else
+      {
+        Console.WriteLine("Escolha inválida. Tarefa não excluída.");
+      }
+    }
+
+    static void ListarTarefas()
+    {
+      Console.WriteLine("----- LISTA DE TAREFAS -----");
+      if (tarefas.Count > 0)
+      {
+        for (int i = 0; i < tarefas.Count; i++)
+        {
+          Console.WriteLine($"{i + 1}. {tarefas[i].Titulo}");
+          Console.WriteLine($"{tarefas[i].Descricao}");
+          Console.WriteLine($"Concluída: {tarefas[i].Concluida}");
+          Console.WriteLine($"Prazo: {tarefas[i].Prazo:yyyy-MM-dd}");
+          Console.WriteLine();
+        }
+      }
+      else
+      {
+        Console.WriteLine("Nenhuma tarefa encontrada.");
+      }
+    }
+
+    static void BuscarTarefas()
+    {
+      Console.WriteLine("Qual a palavra-chave?");
+      string busca = Console.ReadLine().ToLower();
+      var resultado = tarefas.Where(tarefa => tarefa.Titulo.Contains(busca) || tarefa.Descricao.Contains(busca)).ToList();
+
+      Console.WriteLine("----- RESULTADOS DA PESQUISA -----");
+      foreach (var tarefa in resultado)
+      {
+        Console.WriteLine(tarefa.Titulo);
+        Console.WriteLine(tarefa.Descricao);
+        Console.WriteLine($"Concluída: {tarefa.Concluida}");
+        Console.WriteLine($"Prazo: {tarefa.Prazo:yyyy-MM-dd}");
+        Console.WriteLine();
+      }
+    }
+
+    static void ExibirEstatisticas()
+    {
+      Console.WriteLine($"Existem {tarefas.Count} tarefas no total.");
+      Console.WriteLine($"Existem {tarefas.Count(tarefa => tarefa.Concluida)} tarefas concluídas.");
+      Console.WriteLine($"Existem {tarefas.Count(tarefa => !tarefa.Concluida)} tarefas pendentes.");
+    }
+
+    static void EditarTarefa()
+    {
+      ListarTarefas();
+      Console.WriteLine("Qual tarefa deseja editar? (Digite 0 para cancelar)");
+      if (int.TryParse(Console.ReadLine(), out int escolha) && escolha > 0 && escolha <= tarefas.Count)
+      {
+        Console.WriteLine("Qual o novo título?");
+        tarefas[escolha - 1].Titulo = Console.ReadLine();
+        Console.WriteLine("Qual a nova descrição?");
+        tarefas[escolha - 1].Descricao = Console.ReadLine();
+        Console.WriteLine("Qual o novo prazo (yyyy-MM-dd)?");
+
+        if (DateTime.TryParse(Console.ReadLine(), out DateTime novoPrazo))
+        {
+          tarefas[escolha - 1].Prazo = novoPrazo;
+          Console.WriteLine("Tarefa editada com sucesso!");
+        }
+        else
+        {
+          Console.WriteLine("Formato de data inválido. Tarefa não editada.");
+        }
+      }
+      else
+      {
+        Console.WriteLine("Escolha inválida. Tarefa não editada.");
+      }
+    }
+  }
 }
-#endregion
-
-#region Operadores de Igualdade
-
-string str1 = "Hello";
-string str2 = "World";
-
-if (str1 == str2)
-{
-  Console.WriteLine("As strings são iguais.");
-}
-else
-{
-  Console.WriteLine("As strings não são iguais.");
-}
-
-#endregion
-
-#region operadores logicos
-
-bool condicao1 = true;
-bool condicao2 = false;
-
-if (condicao1 && condicao2)
-{
-  Console.WriteLine("Ambas as condições são verdadeiras.");
-}
-else
-{
-  Console.WriteLine("Ambas as condições não são verdadeiras.");
-}
-
-#endregion
-
-#region mistura de operadores
-int num1 = 7;
-int num2 = 3;
-int num3 = 10;
-
-if (num1 > num2 && num3 == num1 + num2)
-{
-  Console.WriteLine("num1 é maior do que num2 e num3 é igual a num1 + num2.");
-}
-else
-{
-  Console.WriteLine("num1 não é maior do que num2 ou num3 não é igual a num1 + num2.");
-}
-#endregion
